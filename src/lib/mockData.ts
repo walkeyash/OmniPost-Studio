@@ -137,12 +137,42 @@ export function generateMockRepurpose(
     '#Leadership',
   ];
 
-  // 2. LinkedIn Thought Leadership Post
-  const linkedinHook = `${s1}\n\nHere is what that means in practice for ${audienceLabel.toLowerCase()}:`;
+  // Dynamic concluding insight tailored to content, tone, and audience
+  const toneClosings: Record<string, string> = {
+    thought_leader: `Mastering ${mainTopic.toLowerCase()} isn't about volume—it's about building repeatable systems around ${secondaryTopic.toLowerCase()}.`,
+    viral_growth: `The difference between those who scale ${mainTopic.toLowerCase()} and those who get left behind comes down to execution velocity.`,
+    conversational: `At the end of the day, ${mainTopic.toLowerCase()} succeeds when it simplifies your workflow rather than complicating it.`,
+    deep_dive: `Sustainable progress in ${mainTopic.toLowerCase()} requires addressing underlying architecture rather than patching surface symptoms.`,
+    executive: `Strategic imperative: Align organizational incentives with measurable ${mainTopic.toLowerCase()} outcomes.`,
+  };
+
+  const dynamicClosing = s5 && s5 !== s4 && s5 !== s1
+    ? `${s5.endsWith('.') ? s5 : s5 + '.'} ${toneClosings[tone] || toneClosings.thought_leader}`
+    : (toneClosings[tone] || toneClosings.thought_leader);
+
+  // Dynamic LinkedIn hook and body framing based on tone
+  const linkedinHookVariations: Record<string, string> = {
+    thought_leader: `${s1}\n\nHere is what this means in practice for ${audienceLabel.toLowerCase()}:`,
+    viral_growth: `Most people approach ${mainTopic.toLowerCase()} completely backwards.\n\nHere is what high-performers do instead:`,
+    conversational: `A simple framework that completely shifted how I think about ${mainTopic.toLowerCase()}:\n\n${s1}`,
+    deep_dive: `A technical breakdown of ${mainTopic.toLowerCase()} and its impact on ${secondaryTopic.toLowerCase()}:\n\nKey takeaways below ⬇️`,
+    executive: `Executive Briefing: ${s1}\n\nStrategic implications for leadership:`,
+  };
+  const linkedinHook = linkedinHookVariations[tone] || linkedinHookVariations.thought_leader;
+
+  const linkedinIntroVariations: Record<string, string> = {
+    thought_leader: `When evaluating ${mainTopic.toLowerCase()}, most teams focus on surface-level metrics instead of foundational leverage points.`,
+    viral_growth: `If you want to move the needle on ${mainTopic.toLowerCase()}, ignore conventional advice and focus on these fundamentals:`,
+    conversational: `Here are the biggest shifts I've noticed when analyzing ${mainTopic.toLowerCase()}:`,
+    deep_dive: `Examining the underlying mechanics of ${mainTopic.toLowerCase()} reveals several critical trade-offs:`,
+    executive: `The strategic rationale for prioritizing ${mainTopic.toLowerCase()} centers on three actionable pillars:`,
+  };
+  const linkedinIntro = linkedinIntroVariations[tone] || linkedinIntroVariations.thought_leader;
+
   const linkedinBody = [
-    `When analyzing ${mainTopic.toLowerCase()}, most teams focus on surface-level metrics.`,
+    linkedinIntro,
     '',
-    `Here are the fundamental shifts taking place:`,
+    `Key takeaways:`,
     '',
     `1. ${s2}`,
     '',
@@ -150,7 +180,7 @@ export function generateMockRepurpose(
     '',
     `3. ${s4}`,
     '',
-    `The organizations and professionals who pull ahead don't just consume information—they build repeatable operating models around it.`,
+    dynamicClosing,
   ].join('\n');
 
   const linkedinTakeaway = s2;
